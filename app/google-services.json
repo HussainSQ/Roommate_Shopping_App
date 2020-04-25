@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "999696270076-36usgbranh283koh63ma973qj47nngd1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.uga.cs.finalproject",
+            "certificate_hash": "e6e1728bded7bfb0b8117bf2ba5a663b5dd57e55"
+          }
+        },
+        {
           "client_id": "999696270076-5eupc6lqrp7u6248cr48572udh7daqor.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

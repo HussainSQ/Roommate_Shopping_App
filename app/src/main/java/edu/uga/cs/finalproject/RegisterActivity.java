@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,9 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
     EditText fullName, email, password, passwordConf;
     Button buttonReg;
     TextView loginBut;
-    FirebaseAuth auth;
     ProgressBar progBar;
-    FirebaseFirestore store;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth auth;
     String userID;
 
     @Override
@@ -53,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         loginBut = findViewById(R.id.registeredAlr);
         auth = FirebaseAuth.getInstance();
         progBar = findViewById(R.id.progressBar);
-        store = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "User Created. ", Toast.LENGTH_LONG).show();
                             userID = auth.getCurrentUser().getUid();
-                            DocumentReference documentReference = store.collection("users").document(userID);
+                            DocumentReference documentReference = db.collection("users").document(userID);
                             Map<String,Object> user = new HashMap<>();
                             user.put("fullname", nameB);
                             user.put("email", emailB);

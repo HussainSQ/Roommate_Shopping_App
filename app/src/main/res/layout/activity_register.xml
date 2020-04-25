@@ -21,13 +21,13 @@
 
     <TextView
         android:id="@+id/regHeader"
-        android:layout_width="196dp"
-        android:layout_height="36dp"
+        android:layout_width="185dp"
+        android:layout_height="32dp"
         android:layout_marginTop="64dp"
         android:fontFamily="@font/abril_fatface"
         android:text="Registration"
         android:textAllCaps="true"
-        android:textColor="#2B2B2B"
+        android:textColor="#2FBD24"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
