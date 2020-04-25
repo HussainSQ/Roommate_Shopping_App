@@ -4,12 +4,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +28,6 @@ public class HomeActivity extends AppCompatActivity {
     FirebaseFirestore store;
     String userID;
     FirebaseAuth auth;
-    ImageButton share;
     Button grocList;
     Button purchList;
 
@@ -47,19 +48,23 @@ public class HomeActivity extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                welcome.setText("Welcome, " + documentSnapshot.getString("name"));
-
+                welcome.setText("Welcome, " + documentSnapshot.getString("fullname"));
             }
         });
-
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("remember", "false");
+                editor.apply();
+                //finish();
                 logout(v);
             }
         });
-
     }
+
+
 
         public void logout(View view){
             FirebaseAuth.getInstance().signOut();
