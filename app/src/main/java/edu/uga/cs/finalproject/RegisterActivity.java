@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,12 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +37,8 @@ public class RegisterActivity extends AppCompatActivity {
     TextView loginBut;
     FirebaseAuth auth;
     ProgressBar progBar;
+    FirebaseFirestore store;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +53,13 @@ public class RegisterActivity extends AppCompatActivity {
         loginBut = findViewById(R.id.registeredAlr);
         auth = FirebaseAuth.getInstance();
         progBar = findViewById(R.id.progressBar);
+        store = FirebaseFirestore.getInstance();
 
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nameB = fullName.getText().toString().trim();
-                String emailB = email.getText().toString().trim();
+                final String nameB = fullName.getText().toString().trim();
+                final String emailB = email.getText().toString().trim();
                 String passwordB = password.getText().toString().trim();
                 String passwordConfB = passwordConf.getText().toString().trim();
                 Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
@@ -104,10 +114,27 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "User Created. ", Toast.LENGTH_LONG).show();
+                            userID = auth.getCurrentUser().getUid();
+                            DocumentReference documentReference = store.collection("users").document(userID);
+                            Map<String,Object> user = new HashMap<>();
+                            user.put("fullname", nameB);
+                            user.put("email", emailB);
+                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("DEBUG", "onSuccess: user profile is created for " + userID);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("DEBUG", "onFailure: " + e.toString());
+                                }
+                            });
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
                             Toast.makeText(RegisterActivity.this, "Error: " + task.getException(), Toast.LENGTH_LONG).show();
                             System.out.println("Error: " + task.getException());
+                            progBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
