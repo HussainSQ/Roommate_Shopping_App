@@ -60,15 +60,10 @@ public class ShareDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String email = emailDia.getText().toString();
-                        String groc = grocList.getText().toString();
-                     /**
-                        ApiFuture<QuerySnapshot> future = store.collection("users").whereEqualTo("email", true).get();
-                        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-                        for(DocumentSnapshot document : documents){
-                            System.out.println(document.getId() + " => " + document.toObject(HomeActivity.class));
-                        }
-                        **/
+                        final String email = emailDia.getText().toString();
+                        final String groc = grocList.getText().toString();
+
+
                         if(TextUtils.isEmpty(email) || email.equals("")){
                             emailDia.setError("Enter an email");
                             return;
@@ -78,24 +73,52 @@ public class ShareDialog extends AppCompatDialogFragment {
                             return;
                         }
 
-                        DocumentReference documentReference = store.collection("UserConnector").document(String.valueOf(Math.random()));
-                        Map<String,Object> userConnector = new HashMap<>();
-                        userConnector.put("email", email);
-                        userConnector.put("grocery list", groc);
-                        documentReference.set(userConnector).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                        Log.d("DEBUG", "onSuccess: list was shared " + userID);
-                        //Toast.makeText(getActivity(),"List has been shared", Toast.LENGTH_SHORT).show();
-                        }
+                        store.collection("users").whereEqualTo("email", email).get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d("DEBUG", document.getId() + " => " + document.getData());
 
-                        }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                        Log.d("DEBUG", "onFailure: " + e.toString());
-                        //Toast.makeText(getActivity(), "Error: List was not created" + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        });
+                                                store.collection("GroceryList").whereEqualTo("name", groc).get()
+                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                                                        DocumentReference documentReference = store.collection("UserConnector").document(String.valueOf(Math.random()));
+                                                                        Map<String,Object> userConnector = new HashMap<>();
+                                                                        userConnector.put("email", email);
+                                                                        userConnector.put("grocery list", groc);
+                                                                        documentReference.set(userConnector).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void aVoid) {
+                                                                                Log.d("DEBUG", "onSuccess: list was shared " + userID);
+                                                                                //Toast.makeText(getActivity(),"List has been shared", Toast.LENGTH_SHORT).show();
+                                                                            }
+
+                                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                Log.d("DEBUG", "onFailure: " + e.toString());
+                                                                                //Toast.makeText(getActivity(), "Error: List was not created" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                                            }
+                                                                        });
+
+                                                                    }
+                                                                } else {
+                                                                    Log.w("DEBUG", "Error getting documents.", task.getException());
+                                                                }
+                                                            }
+                                                        });
+                                            }
+                                        } else {
+                                            Log.w("DEBUG", "Error getting documents.", task.getException());
+                                        }
+                                    }
+                                });
                     }
                 });
 

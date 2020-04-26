@@ -131,7 +131,7 @@ public class HomeActivity extends AppCompatActivity {
                                 Toast.makeText(HomeActivity.this,"List has been created", Toast.LENGTH_SHORT).show();
 
 
-                                DocumentReference ref = store.collection("UserConnector").document(userID);
+                                DocumentReference ref = store.collection("UserConnector").document(String.valueOf(Math.random()*2));
                                 Map<String,Object> userCon = new HashMap<>();
                                 userCon.put("UserID", userID);
                                 userCon.put("GroceryListID", list);
