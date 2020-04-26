@@ -36,10 +36,9 @@
         android:text="Recently Purchased"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/groceryList"
-        app:layout_constraintVertical_bias="0.169" />
+        app:layout_constraintVertical_bias="0.061" />
 
     <Button
         android:id="@+id/shareList"
@@ -71,10 +70,10 @@
         android:layout_marginBottom="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.916"
+        app:layout_constraintHorizontal_bias="0.997"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shareList"
-        app:layout_constraintVertical_bias="0.909"
+        app:layout_constraintVertical_bias="0.719"
         app:srcCompat="@android:drawable/ic_input_add" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
