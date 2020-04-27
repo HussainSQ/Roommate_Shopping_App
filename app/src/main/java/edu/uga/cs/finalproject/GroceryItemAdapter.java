@@ -15,12 +15,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import org.w3c.dom.Text;
 
 public class GroceryItemAdapter extends FirestoreRecyclerAdapter<GroceryItem, GroceryItemAdapter.GroceryHolder>{
-    /**
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
+
     public GroceryItemAdapter(@NonNull FirestoreRecyclerOptions<GroceryItem> options) {
         super(options);
     }
@@ -39,11 +34,14 @@ public class GroceryItemAdapter extends FirestoreRecyclerAdapter<GroceryItem, Gr
         return new GroceryHolder(v);
     }
 
+    public void buyItem(int position){
+        getSnapshots().getSnapshot(position).getReference().delete();
+    }
+
     class GroceryHolder extends RecyclerView.ViewHolder{
         TextView title;
         TextView desc;
         TextView prio;
-
 
         public GroceryHolder(@NonNull View itemView) {
             super(itemView);

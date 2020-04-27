@@ -3,6 +3,8 @@ package edu.uga.cs.finalproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +23,6 @@ public class NewItemActivity extends AppCompatActivity {
     private EditText desc;
     private NumberPicker pick;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +34,8 @@ public class NewItemActivity extends AppCompatActivity {
 
         pick.setMinValue(1);
         pick.setMaxValue(50);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        setTitle("Add Item");
     }
 
     @Override
@@ -59,7 +62,7 @@ public class NewItemActivity extends AppCompatActivity {
         int priority = pick.getValue();
 
         if(itemTitle.trim().isEmpty() || description.trim().isEmpty()) {
-            Toast.makeText(this, "Insert a item and note", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Insert a item and note about item", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -68,4 +71,5 @@ public class NewItemActivity extends AppCompatActivity {
         Toast.makeText(this, "Item added", Toast.LENGTH_SHORT).show();
         finish();
     }
+
 }
