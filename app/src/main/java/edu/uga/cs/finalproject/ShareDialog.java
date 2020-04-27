@@ -64,61 +64,59 @@ public class ShareDialog extends AppCompatDialogFragment {
                         final String groc = grocList.getText().toString();
 
 
-                        if(TextUtils.isEmpty(email) || email.equals("")){
+                        if (TextUtils.isEmpty(email) || email.equals("")) {
                             emailDia.setError("Enter an email");
                             return;
                         }
-                        if(TextUtils.isEmpty(groc) || groc.equals("")){
+                        if (TextUtils.isEmpty(groc) || groc.equals("")) {
                             grocList.setError("Enter a grocery list");
                             return;
                         }
 
-                        store.collection("users").whereEqualTo("email", email).get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d("DEBUG", document.getId() + " => " + document.getData());
+                        store.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("DEBUG", document.getId() + " => " + document.getData());
 
-                                                store.collection("GroceryList").whereEqualTo("name", groc).get()
-                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        store.collection("GroceryList").whereEqualTo("name", groc).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                                        DocumentReference documentReference = store.collection("UserConnector").document(String.valueOf(Math.random()));
+                                                        Map<String, Object> userConnector = new HashMap<>();
+                                                        userConnector.put("email", email);
+                                                        userConnector.put("grocery list", groc);
+                                                        documentReference.set(userConnector).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                             @Override
-                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            public void onSuccess(Void aVoid) {
+                                                                Log.d("DEBUG", "onSuccess: list was shared " + userID);
+                                                                //Toast.makeText(getActivity(),"List has been shared", Toast.LENGTH_SHORT).show();
+                                                            }
 
-                                                                        DocumentReference documentReference = store.collection("UserConnector").document(String.valueOf(Math.random()));
-                                                                        Map<String,Object> userConnector = new HashMap<>();
-                                                                        userConnector.put("email", email);
-                                                                        userConnector.put("grocery list", groc);
-                                                                        documentReference.set(userConnector).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                            @Override
-                                                                            public void onSuccess(Void aVoid) {
-                                                                                Log.d("DEBUG", "onSuccess: list was shared " + userID);
-                                                                                //Toast.makeText(getActivity(),"List has been shared", Toast.LENGTH_SHORT).show();
-                                                                            }
-
-                                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                                            @Override
-                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                Log.d("DEBUG", "onFailure: " + e.toString());
-                                                                                //Toast.makeText(getActivity(), "Error: List was not created" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                                            }
-                                                                        });
-
-                                                                    }
-                                                                } else {
-                                                                    Log.w("DEBUG", "Error getting documents.", task.getException());
-                                                                }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.d("DEBUG", "onFailure: " + e.toString());
+                                                                //Toast.makeText(getActivity(), "Error: List was not created" + e.getMessage(), Toast.LENGTH_LONG).show();
                                                             }
                                                         });
+
+                                                    }
+                                                } else {
+                                                    Log.w("DEBUG", "Error getting documents.", task.getException());
+                                                }
                                             }
-                                        } else {
-                                            Log.w("DEBUG", "Error getting documents.", task.getException());
-                                        }
+                                        });
                                     }
-                                });
+                                } else {
+                                    Log.w("DEBUG", "Error getting documents.", task.getException());
+                                }
+                            }
+                        });
                     }
                 });
 

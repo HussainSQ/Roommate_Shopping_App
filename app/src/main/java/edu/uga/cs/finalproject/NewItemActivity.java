@@ -22,6 +22,7 @@ public class NewItemActivity extends AppCompatActivity {
     EditText title;
     private EditText desc;
     private NumberPicker pick;
+    FirebaseFirestore store = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

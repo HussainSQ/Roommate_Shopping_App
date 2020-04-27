@@ -63,7 +63,8 @@ public class HomeActivity extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialog();
+                ShareDialog shareDialog = new ShareDialog();
+                shareDialog.show(getSupportFragmentManager(),"Share dialog");
 
                 /**
                 final EditText email = new EditText(v.getContext());
@@ -105,9 +106,6 @@ public class HomeActivity extends AppCompatActivity {
                 **/
             }
         });
-
-
-
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,8 +166,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
-
         final DocumentReference documentReference = store.collection("users").document(userID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
@@ -177,6 +173,7 @@ public class HomeActivity extends AppCompatActivity {
                 welcome.setText("Welcome, " + documentSnapshot.getString("fullname"));
             }
         });
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,8 +181,9 @@ public class HomeActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("remember", "false");
                 editor.apply();
-                //finish();
-                logout(v);
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                finish();
             }
         });
 
@@ -196,18 +194,5 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-
-
-    public void logout(View view){
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(),LoginActivity.class));
-        finish();
-    }
-
-    public void openDialog(){
-        ShareDialog shareDialog = new ShareDialog();
-        shareDialog.show(getSupportFragmentManager(),"Share dialog");
     }
 }

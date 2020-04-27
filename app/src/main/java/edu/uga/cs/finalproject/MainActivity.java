@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     protected String DEBUG_TAG = "MainActivity";
-    private final int SPLASH = 4500;
+    private final int SPLASH = 1500;
     Intent intent;
 
     @Override
