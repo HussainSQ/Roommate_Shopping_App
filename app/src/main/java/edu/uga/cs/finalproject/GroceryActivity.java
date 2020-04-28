@@ -130,7 +130,7 @@ public class GroceryActivity extends AppCompatActivity implements GroceryItemAda
     }
 
     private void setUpRecyclerView(){
-        Query query = ref.orderBy("priority", Query.Direction.DESCENDING);
+        Query query = ref.orderBy("priority", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<GroceryItem> options = new FirestoreRecyclerOptions.Builder<GroceryItem>().setQuery(query, GroceryItem.class).build();
         adapter = new GroceryItemAdapter(options, this);
 

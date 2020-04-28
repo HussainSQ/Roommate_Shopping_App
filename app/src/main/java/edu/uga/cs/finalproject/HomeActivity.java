@@ -29,6 +29,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -191,6 +192,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, GroceryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        purchList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, RecentlyPurchasedActivity.class);
                 startActivity(intent);
             }
         });

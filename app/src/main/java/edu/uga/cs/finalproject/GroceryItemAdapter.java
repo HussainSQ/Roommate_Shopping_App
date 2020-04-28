@@ -18,6 +18,7 @@ public class GroceryItemAdapter extends FirestoreRecyclerAdapter<GroceryItem, Gr
         this.listener = onItemClickListener;
     }
 
+
     @Override
     protected void onBindViewHolder(@NonNull GroceryHolder holder, int position, @NonNull GroceryItem model) {
         holder.title.setText(model.getTitle());
@@ -50,20 +51,7 @@ public class GroceryItemAdapter extends FirestoreRecyclerAdapter<GroceryItem, Gr
             this.onItemClickListener = onItemClickListener;
 
             itemView.setOnClickListener(this);
-
-            /**
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (pos != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onItemClick(getSnapshots().getSnapshot(pos),pos);
-                    }
-                }
-            });
-             **/
         }
-
 
         @Override
         public void onClick(View v) {
